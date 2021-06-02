@@ -1,1 +1,1 @@
-# Learning-Place-Cells-from-Grid-Cells-Using-Nonnegative-Sparse-Coding
+# Learning an efficient hippocampal place map from entorhinal inputs using non-negative sparse coding
