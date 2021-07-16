@@ -163,7 +163,7 @@ for i_input = 1 : n_input
 end
 
 X = E' * X_recover; % Response of grid cells
-[S, U] = sparse_coding_by_LCA(X, A, lca_lambda, lca_thresh_type, lca_eta, lca_n_iter); % Compute the response of place cells
+[S, U] = sparse_coding_by_LCA(X, A, lca_lambda, lca_eta, lca_n_iter); % Compute the response of place cells
 place_field_recover = X_recover(:, 1:n_input) * S' ./ repmat(sum(S,2)', L, 1); % Using reverse correlation / STA to recover the place field of cells
 
 figure(4);
