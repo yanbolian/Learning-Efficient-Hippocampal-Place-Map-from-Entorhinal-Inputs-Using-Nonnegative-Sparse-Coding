@@ -111,7 +111,7 @@ for i_epoch = 1 : n_epoch
     % Generate a random spatial location
     temp = zeros(Ny, Nx);
     temp(randi([1, Ny]), randi([1, Nx])) = 1;
-    X_data(:,i) = reshape(temp, L, 1); % Take uniform input
+    X_data = reshape(temp, L, 1); % Take uniform input
        
     % Response of grid cells
     X = E' * X_data;
