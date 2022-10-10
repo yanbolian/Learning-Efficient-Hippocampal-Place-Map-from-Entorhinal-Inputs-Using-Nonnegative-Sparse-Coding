@@ -1,4 +1,4 @@
-%% This cdoe uses sparse coding (LCA) to learn place fields given prefixed entorhinal cells
+%% This code uses sparse coding (LCA) to learn place fields given prefixed entorhinal cells
 % Author: Yanbo Lian
 % Date: 2021-06-07
 
