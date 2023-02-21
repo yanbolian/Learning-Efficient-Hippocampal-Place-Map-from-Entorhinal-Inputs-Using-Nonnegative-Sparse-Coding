@@ -1,4 +1,4 @@
-%% This code uses sparse coding (LCA) to learn place fields given prefixed entorhinal cells
+%% This cdoe uses sparse coding (LCA) to learn place fields given prefixed entorhinal cells
 % Author: Yanbo Lian
 % Date: 2021-06-07
 
@@ -164,9 +164,39 @@ end
 
 X = E' * X_recover; % Response of grid cells
 [S, U] = sparse_coding_by_LCA(X, A, lca_lambda, lca_eta, lca_n_iter); % Compute the response of place cells
-place_field_recover = X_recover(:, 1:n_input) * S' ./ repmat(sum(S,2)', L, 1); % Using reverse correlation / STA to recover the place field of cells
+lca.place_field_recovered = X_recover(:, 1:n_input) * S' ./ repmat(sum(S,2)', L, 1); % Using reverse correlation / STA to recover the place field of cells
 
 figure(4);
-display_matrix(normalize_matrix(place_field_recover), 3);
+display_matrix(normalize_matrix(lca.place_field_recovered), 3);
 colormap(jet_modified); colorbar
 title('Place field (learned by sparse coding)'); 
+
+%% Fit place fields to 2D Gaussian functions
+[lca.fields_fit, lca.fit_parameters] = fit_2D_gaussian(lca.place_field_recovered, x_size, y_size, Nx, Ny);
+
+%% Select place cells that meet criteria
+fit_errors = [lca.fields_fit(:).fit_error];
+max(fit_errors)
+
+fit_error_threshold = 10; % percentage
+radius_threshold = 0.05; % Unit: meters.
+
+% Find place cells that meet the criteria: fitting error<15% and radius>5cm
+place_cells_index = [];
+for i_cell = 1 : num_place_cell
+    if lca.fields_fit(i_cell).fit_error < fit_error_threshold ...
+            && lca.fields_fit(i_cell).params(4) > radius_threshold
+        place_cells_index = [place_cells_index i_cell];
+    end
+end
+
+% Plot firing fields of place cells
+disp = lca.place_field_recovered(:, place_cells_index);
+fig = figure();
+display_matrix(disp, 3);
+title('Place cells that meet criteria')
+colormap(jet_modified)
+h = colorbar;
+set(h, 'ylim', [0 1])
+h.FontSize = 18;
+h.Ticks = 0 : 0.2 : 1;
